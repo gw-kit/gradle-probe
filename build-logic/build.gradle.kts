@@ -4,4 +4,5 @@ plugins {
 
 dependencies {
     implementation(libs.kotlinGradlePlugin)
+    implementation(libs.deltaCoveragePlugin)
 }
