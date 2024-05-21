@@ -1,5 +1,6 @@
 plugins {
     id("buildlogic.java-common-conventions")
+    id("buildlogic.delta-coverage-conventions")
 }
 
 allprojects {

@@ -1,7 +1,15 @@
 [versions]
 kotlinVersion = "1.9.22"
+junitVersion = "5.10.0"
+deltaCoverageVer = "2.3.0"
 
 [libraries]
+# Kotlin
+kotlinReflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlinVersion" }
 kotlinGradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlinVersion" }
+deltaCoveragePlugin = { module = "io.github.surpsg:delta-coverage-gradle", version.ref = "deltaCoverageVer" }
+
+# Testing
+junit = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junitVersion" }
 
 [plugins]
