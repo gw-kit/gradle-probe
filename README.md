@@ -1,2 +1,236 @@
 # gradle-probe
-Test gradle plugins with gradle-probe
+
+A lightweight library for writing functional tests for Gradle plugins with minimal boilerplate.
+
+## Features
+
+- **Declarative test setup** - Use annotations to configure test projects
+- **Automatic project copying** - Test projects are copied from resources to temp directories
+- **Property injection** - `GradleRunner`, project files, and directories are automatically injected
+- **Kotlin DSL support** - Seamlessly switch between Groovy and Kotlin DSL build files
+- **Restorable files** - Modify files during tests and restore them to original state
+
+## Installation
+
+Add the dependency to your `build.gradle.kts`:
+
+```kotlin
+dependencies {
+    testImplementation("io.github.gwkit.gradleprobe:gradle-probe:0.0.1")
+    testImplementation(gradleTestKit())
+}
+```
+
+## Quick Start
+
+1. Create a test project in `src/test/resources/`:
+
+```
+src/test/resources/
+└── my-test-project/
+    ├── build.gradle.kts
+    ├── settings.gradle.kts
+    └── src/
+        └── ...
+```
+
+2. Write your test:
+
+```kotlin
+@GradlePluginTest("my-test-project")
+class MyPluginTest {
+
+    @RootProjectDir
+    lateinit var projectDir: File
+
+    @GradleRunnerInstance
+    lateinit var gradleRunner: GradleRunner
+
+    @Test
+    fun `plugin applies successfully`() {
+        gradleRunner.runTask("tasks")
+            .assertOutputContainsStrings("BUILD SUCCESSFUL")
+    }
+}
+```
+
+## Annotations
+
+### `@GradlePluginTest`
+
+Marks a test class for Gradle plugin testing. The extension copies the specified project from resources to a temporary directory.
+
+```kotlin
+@GradlePluginTest(
+    resourceProjectDir = "my-test-project",  // Path in src/test/resources
+    kts = true                                // true: keep .kts files, false: keep .gradle files
+)
+class MyTest { ... }
+```
+
+**Parameters:**
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `resourceProjectDir` | `String` | required | Relative path to test project in resources |
+| `kts` | `Boolean` | `true` | When `true`, deletes `.gradle` files; when `false`, deletes `.gradle.kts` files |
+
+### `@RootProjectDir`
+
+Injects the root project directory as a `File`.
+
+```kotlin
+@RootProjectDir
+lateinit var projectDir: File
+```
+
+### `@GradleRunnerInstance`
+
+Injects a pre-configured `GradleRunner` instance.
+
+```kotlin
+@GradleRunnerInstance
+lateinit var gradleRunner: GradleRunner
+```
+
+### `@ProjectFile`
+
+Resolves and injects a file from the project. Supports three types:
+
+```kotlin
+// As File
+@ProjectFile("build.gradle.kts")
+lateinit var buildFile: File
+
+// As String (Unix-style absolute path)
+@ProjectFile("build.gradle.kts")
+lateinit var buildFilePath: String
+
+// As RestorableFile (can be restored to original content)
+@ProjectFile("build.gradle.kts")
+lateinit var restorableBuildFile: RestorableFile
+```
+
+## Utility Functions
+
+### GradleRunner Extensions
+
+```kotlin
+// Run tasks (adds -si flags automatically)
+gradleRunner.runTask("build", "test")
+
+// Run tasks expecting failure
+gradleRunner.runTaskAndFail("build")
+```
+
+### BuildResult Assertions
+
+```kotlin
+gradleRunner.runTask("build")
+    .assertOutputContainsStrings(
+        "BUILD SUCCESSFUL",
+        "Task :compileKotlin"
+    )
+```
+
+### Resource Utilities
+
+```kotlin
+// Copy directory from resources
+val targetDir = tempDir.copyDirFromResources<MyTest>("test-project")
+
+// Get file from resources
+val resourceFile = getResourceFile<MyTest>("test-project/build.gradle.kts")
+
+// Convert to Unix path
+val unixPath = file.toUnixAbsolutePath()
+```
+
+## RestorableFile
+
+Use `RestorableFile` when you need to modify a file during a test and restore it afterward:
+
+```kotlin
+@GradlePluginTest("my-test-project")
+class ModifyBuildFileTest {
+
+    @ProjectFile("build.gradle.kts")
+    lateinit var buildFile: RestorableFile
+
+    @Test
+    fun `test with modified build file`() {
+        // Modify the file
+        buildFile.file.appendText("""
+            tasks.register("customTask") {
+                doLast { println("Custom!") }
+            }
+        """.trimIndent())
+
+        // Run test...
+
+        // Restore original content
+        buildFile.restoreOriginContent()
+    }
+}
+```
+
+## Complete Example
+
+```kotlin
+@GradlePluginTest("sample-project", kts = true)
+class MyGradlePluginFunctionalTest {
+
+    @RootProjectDir
+    lateinit var projectDir: File
+
+    @GradleRunnerInstance
+    lateinit var gradleRunner: GradleRunner
+
+    @ProjectFile("build.gradle.kts")
+    lateinit var buildFile: RestorableFile
+
+    @ProjectFile("settings.gradle.kts")
+    lateinit var settingsFile: File
+
+    @Test
+    fun `plugin registers expected tasks`() {
+        gradleRunner.runTask("tasks", "--all")
+            .assertOutputContainsStrings(
+                "myCustomTask",
+                "BUILD SUCCESSFUL"
+            )
+    }
+
+    @Test
+    fun `plugin fails with invalid configuration`() {
+        buildFile.file.appendText("""
+            myPlugin {
+                invalidOption = true
+            }
+        """.trimIndent())
+
+        gradleRunner.runTaskAndFail("build")
+            .assertOutputContainsStrings("Invalid configuration")
+
+        buildFile.restoreOriginContent()
+    }
+
+    @Test
+    fun `plugin generates expected output`() {
+        gradleRunner.runTask("generateFiles")
+
+        val generatedFile = projectDir.resolve("build/generated/output.txt")
+        assertThat(generatedFile).exists()
+        assertThat(generatedFile.readText()).contains("Expected content")
+    }
+}
+```
+
+## Requirements
+
+- JDK 17+
+- Gradle 8.0+
+- JUnit Jupiter 5+
+
+## License
+
+MIT License
