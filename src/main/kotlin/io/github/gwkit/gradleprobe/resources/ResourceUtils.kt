@@ -1,4 +1,4 @@
-package io.github.gwkit.gradleprobe
+package io.github.gwkit.gradleprobe.resources
 
 import java.io.File
 
@@ -8,7 +8,7 @@ import java.io.File
  * @param filePath The relative path to the resource file.
  * @return The file from resources.
  */
-inline fun <reified T> getResourceFile(filePath: String): File {
+internal inline fun <reified T> getResourceFile(filePath: String): File {
     return T::class.java.classLoader
         .getResource(filePath)?.file
         ?.let(::File)
@@ -22,7 +22,7 @@ inline fun <reified T> getResourceFile(filePath: String): File {
  * @param destDir The destination directory name. Defaults to [dirToCopy].
  * @return The target directory.
  */
-inline fun <reified T> File.copyDirFromResources(
+internal inline fun <reified T> File.copyDirFromResources(
     dirToCopy: String,
     destDir: String = dirToCopy,
 ): File {
@@ -34,4 +34,4 @@ inline fun <reified T> File.copyDirFromResources(
 /**
  * Converts the file path to a Unix-style absolute path.
  */
-fun File.toUnixAbsolutePath(): String = absolutePath.replace("\\", "/")
+internal fun File.toUnixAbsolutePath(): String = absolutePath.replace("\\", "/")

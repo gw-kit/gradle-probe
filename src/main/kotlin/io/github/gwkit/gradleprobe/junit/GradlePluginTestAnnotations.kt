@@ -1,5 +1,6 @@
-package io.github.gwkit.gradleprobe
+package io.github.gwkit.gradleprobe.junit
 
+import io.github.gwkit.gradleprobe.junit.extension.GradlePluginTestExtension
 import org.junit.jupiter.api.extension.ExtendWith
 
 /**
@@ -9,7 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith
  * @param resourceProjectDir The relative path to the test project located in resources.
  * @param kts copies only `build.gradle.kts` files from resources project if any, otherwise copies `build.gradle` files.
  *
- * @see GradlePluginTestExtension
+ * @see io.github.gwkit.gradleprobe.junit.extension.GradlePluginTestExtension
  */
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.RUNTIME)
@@ -56,7 +57,7 @@ annotation class RootProjectDir
 
 /**
  * Resolves and injects a project file into test class property. The file must exist.
- * The property must be of type [java.io.File], [String], or [RestorableFile] and must be lateinit.
+ * The property must be of type [java.io.File], [String], or [io.github.gwkit.gradleprobe.RestorableFile] and must be lateinit.
  * ```
  * @GradlePluginTest("testProject")
  * class MyTest {

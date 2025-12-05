@@ -17,7 +17,6 @@ class RestorableFile(
     /**
      * Restores the file to its original content.
      */
-    @Throws(IOException::class)
     fun restoreOriginContent() {
         originFileCopy.copyTo(file, overwrite = true)
     }
