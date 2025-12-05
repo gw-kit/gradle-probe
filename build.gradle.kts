@@ -11,7 +11,13 @@ repositories {
 }
 
 dependencies {
+    api(libs.junitApi)
+    compileOnly(gradleTestKit())
+    api(libs.kotlinReflect)
+    api(libs.kotestAssertions)
+
     testImplementation(libs.junitApi)
+    testImplementation(gradleTestKit())
 }
 
 val targetJvmVersion = JavaLanguageVersion.of(17)
@@ -22,6 +28,7 @@ kotlin {
     compilerOptions {
         apiVersion = KotlinVersion.KOTLIN_1_9
         languageVersion = KotlinVersion.KOTLIN_1_9
+        freeCompilerArgs.add("-Xskip-metadata-version-check")
     }
 }
 

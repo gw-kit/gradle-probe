@@ -23,6 +23,9 @@ mockk = { module = "io.mockk:mockk", version.ref = "mockkVer" }
 kotestAssertions = { module = "io.kotest:kotest-assertions-core-jvm", version.ref = "kotestVer" }
 jimFs = { module = "com.google.jimfs:jimfs", version.ref = "jimfsVer" }
 
+# Kotlin
+kotlinReflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlinVer" }
+
 [plugins]
 kotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlinVer" }
 mavenPublish = { id = "com.vanniktech.maven.publish", version = "0.34.0" }
