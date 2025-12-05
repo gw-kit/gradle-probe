@@ -1,7 +1,5 @@
 package io.github.gwkit.gradleprobe
 
-import io.kotest.assertions.assertSoftly
-import io.kotest.matchers.string.shouldContain
 import org.gradle.testkit.runner.BuildResult
 import org.gradle.testkit.runner.GradleRunner
 import java.io.File
@@ -69,19 +67,4 @@ fun GradleRunner.runTaskAndFail(vararg task: String): BuildResult {
 private fun GradleRunner.tasksWithDebugOption(vararg task: String): GradleRunner {
     val arguments: List<String> = mutableListOf(*task) + "-si"
     return withArguments(*arguments.toTypedArray())
-}
-
-/**
- * Asserts that the build output contains all the specified strings.
- *
- * @param expectedString The strings that should be present in the output.
- * @return This build result for chaining.
- */
-fun BuildResult.assertOutputContainsStrings(vararg expectedString: String): BuildResult {
-    assertSoftly(output) {
-        expectedString.forEach {
-            shouldContain(it)
-        }
-    }
-    return this
 }
