@@ -7,6 +7,7 @@ kotestVer = "6.0.4"
 jimfsVer = "1.3.1"
 
 deltaCoverageVer = "3.5.1"
+detektVer = "1.23.8"
 
 [libraries]
 # Kotlin
@@ -15,7 +16,7 @@ kotlinJvm = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref 
 # Plugins
 pluginPublish = { module = "com.gradle.publish:plugin-publish-plugin", version = "2.0.0" }
 deltaCoverage = { module = "io.github.gw-kit:delta-coverage-gradle", version.ref = "deltaCoverageVer" }
-detekt = { module = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin", version = "1.23.8" }
+detekt = { module = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin", version.ref = "detektVer" }
 
 # Testing
 junitApi = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junitVer" }
@@ -30,3 +31,4 @@ kotlinReflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = 
 kotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlinVer" }
 mavenPublish = { id = "com.vanniktech.maven.publish", version = "0.34.0" }
 deltaCoverage = { id = "io.github.gw-kit.delta-coverage", version.ref = "deltaCoverageVer" }
+detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detektVer" }

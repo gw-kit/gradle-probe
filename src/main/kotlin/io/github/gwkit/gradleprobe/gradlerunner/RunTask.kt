@@ -23,7 +23,8 @@ fun GradleRunner.runTaskAndFail(vararg task: String): BuildResult {
     return tasksWithDebugOption(*task).buildAndFail()
 }
 
+@Suppress("SpreadOperator")
 private fun GradleRunner.tasksWithDebugOption(vararg task: String): GradleRunner {
-    val arguments: List<String> = mutableListOf(*task) + "-si"
-    return withArguments(*arguments.toTypedArray())
+    val arguments: List<String> = task.toList() + "-si"
+    return withArguments(arguments)
 }

@@ -5,6 +5,7 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 plugins {
     alias(libs.plugins.kotlinJvm)
     alias(libs.plugins.deltaCoverage)
+    alias(libs.plugins.detekt)
     `jvm-test-suite`
 }
 
@@ -89,4 +90,9 @@ configure<io.github.surpsg.deltacoverage.gradle.DeltaCoverageConfiguration> {
             violationRules.failIfCoverageLessThan(0.9)
         }
     }
+}
+
+detekt {
+    buildUponDefaultConfig = true
+    parallel = true
 }

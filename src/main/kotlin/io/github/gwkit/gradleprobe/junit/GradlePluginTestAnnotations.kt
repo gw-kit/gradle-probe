@@ -57,7 +57,8 @@ annotation class RootProjectDir
 
 /**
  * Resolves and injects a project file into test class property. The file must exist.
- * The property must be of type [java.io.File], [String], or [io.github.gwkit.gradleprobe.RestorableFile] and must be lateinit.
+ * The property must be of type [java.io.File], [String],
+ * or [io.github.gwkit.gradleprobe.RestorableFile] and must be lateinit.
  * ```
  * @GradlePluginTest("testProject")
  * class MyTest {
