@@ -1,8 +1,10 @@
+import io.github.surpsg.deltacoverage.gradle.CoverageEngine
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 
 plugins {
     alias(libs.plugins.kotlinJvm)
+    alias(libs.plugins.deltaCoverage)
     `jvm-test-suite`
 }
 
@@ -11,10 +13,10 @@ repositories {
 }
 
 dependencies {
-    api(libs.junitApi)
     compileOnly(gradleTestKit())
-    api(libs.kotlinReflect)
-    api(libs.kotestAssertions)
+    implementation(libs.junitApi)
+    implementation(libs.kotlinReflect)
+    implementation(libs.kotestAssertions)
 
     testImplementation(libs.junitApi)
     testImplementation(gradleTestKit())
@@ -69,6 +71,22 @@ testing {
                     }
                 }
             }
+        }
+    }
+}
+
+configure<io.github.surpsg.deltacoverage.gradle.DeltaCoverageConfiguration> {
+    coverage.engine = CoverageEngine.INTELLIJ
+
+    diffSource.git.compareWith("refs/remotes/origin/main")
+
+    reports {
+        html.set(true)
+    }
+
+    reportViews {
+        val test by getting {
+            violationRules.failIfCoverageLessThan(0.9)
         }
     }
 }

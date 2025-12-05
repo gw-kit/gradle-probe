@@ -29,3 +29,4 @@ kotlinReflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = 
 [plugins]
 kotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlinVer" }
 mavenPublish = { id = "com.vanniktech.maven.publish", version = "0.34.0" }
+deltaCoverage = { id = "io.github.gw-kit.delta-coverage", version.ref = "deltaCoverageVer" }
