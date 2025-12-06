@@ -38,7 +38,8 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v5
         with:
-          cache-read-only: ${{ github.ref != 'refs/heads/main' }}
+          cache-read-only: false
+#          cache-read-only: ${{ github.ref != 'refs/heads/main' }}
 
       - name: Build & Test
         run: ${{ env.gradle_cmd }} build --continue

@@ -57,16 +57,14 @@ testing {
                         cacheIf { false }
                     }
 
-                    systemProperty("junit.jupiter.execution.parallel.enabled", true)
-                    systemProperty("junit.jupiter.execution.parallel.config.strategy", "dynamic")
-                    systemProperty("junit.jupiter.execution.parallel.config.dynamic.factor", "0.9")
-                    systemProperty("junit.jupiter.execution.parallel.mode.default", "concurrent")
-//                    systemProperty("junit.jupiter.execution.parallel.mode.default", "same_thread")
-                    systemProperty("junit.jupiter.execution.parallel.mode.classes.default", "concurrent")
-                    systemProperty("junit.jupiter.execution.timeout.default", "10 s")
-                    systemProperty("mockk.junit.extension.requireParallelTesting", "true")
                     systemProperties(
-
+                        "junit.jupiter.execution.parallel.enabled" to true,
+                        "junit.jupiter.execution.parallel.config.strategy" to "dynamic",
+                        "junit.jupiter.execution.parallel.config.dynamic.factor" to "0.9",
+                        "junit.jupiter.execution.parallel.mode.default" to "concurrent",
+                        "junit.jupiter.execution.parallel.mode.classes.default" to "concurrent",
+                        "junit.jupiter.execution.timeout.default" to "10 s",
+                        "mockk.junit.extension.requireParallelTesting" to "true",
                     )
 
                     testLogging {
