@@ -1,10 +1,10 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:base"
+    "config:recommended"
   ],
   "prConcurrentLimit": 6,
   "autoApprove": true,
   "automerge": true,
-  "masterIssue": true
+  "dependencyDashboard": true
 }
