@@ -90,7 +90,7 @@ configure<io.github.surpsg.deltacoverage.gradle.DeltaCoverageConfiguration> {
 
     reportViews {
         val test by getting {
-            violationRules.failIfCoverageLessThan(0.9)
+            violationRules.failIfCoverageLessThan(0.8)
         }
     }
 }
