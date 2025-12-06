@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.deltaCoverage)
     alias(libs.plugins.detekt)
     `jvm-test-suite`
+    `java-gradle-plugin`
 }
 
 repositories {
@@ -60,8 +61,10 @@ testing {
                     systemProperty("junit.jupiter.execution.parallel.config.strategy", "dynamic")
                     systemProperty("junit.jupiter.execution.parallel.config.dynamic.factor", "0.9")
                     systemProperty("junit.jupiter.execution.parallel.mode.default", "concurrent")
+//                    systemProperty("junit.jupiter.execution.parallel.mode.default", "same_thread")
                     systemProperty("junit.jupiter.execution.parallel.mode.classes.default", "concurrent")
                     systemProperty("junit.jupiter.execution.timeout.default", "10 s")
+                    systemProperty("mockk.junit.extension.requireParallelTesting", "true")
                     systemProperties(
 
                     )
