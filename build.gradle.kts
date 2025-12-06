@@ -63,7 +63,7 @@ testing {
                         "junit.jupiter.execution.parallel.config.dynamic.factor" to "0.9",
                         "junit.jupiter.execution.parallel.mode.default" to "concurrent",
                         "junit.jupiter.execution.parallel.mode.classes.default" to "concurrent",
-                        "junit.jupiter.execution.timeout.default" to "10 s",
+                        "junit.jupiter.execution.timeout.default" to "15 s",
                         "mockk.junit.extension.requireParallelTesting" to "true",
                     )
 

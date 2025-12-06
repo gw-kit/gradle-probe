@@ -43,3 +43,7 @@ All code resides in `io.github.gwkit.gradleprobe` package:
 - `kotlin-reflect` for annotation-based property injection
 - `kotest-assertions-core` for assertion utilities
 - Uses `-Xskip-metadata-version-check` compiler flag for Gradle API compatibility
+
+## Code Style
+
+- Each file must have a newline at the end of file (EOL)
