@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.detekt)
     `jvm-test-suite`
     `java-gradle-plugin`
+    `maven-publish`
 }
 
 repositories {
@@ -96,4 +97,26 @@ configure<io.github.surpsg.deltacoverage.gradle.DeltaCoverageConfiguration> {
 detekt {
     buildUponDefaultConfig = true
     parallel = true
+}
+
+if (rootProject.hasProperty("snapshotPrefix")) {
+    val snapshotPrefix: String by project
+    version = "$version-${snapshotPrefix}"
+}
+
+publishing {
+    repositories {
+        mavenLocal()
+        maven {
+            name = "GhPackages"
+            url = uri("https://maven.pkg.github.com/gw-kit/gradle-probe")
+            credentials {
+                username = System.getenv("GH_USER")
+                password = System.getenv("GH_TOKEN")
+            }
+            mavenContent {
+                snapshotsOnly()
+            }
+        }
+    }
 }
