@@ -52,10 +52,7 @@ jobs:
         uses: actions/github-script@v8
         with:
           script: |
-            const hasLabel = ${{ contains(github.event.pull_request.labels.*.name, 'publish-snapshot-artifacts') }};
-            const isPushEvent = ${{ github.event_name == 'push' }};
-            const isMainBranch = ${{ github.ref == 'refs/heads/main' }};
-            const shouldPublish = hasLabel || (isPushEvent && isMainBranch);
+            const shouldPublish = ${{ contains(github.event.pull_request.labels.*.name, 'publish-snapshot-artifacts') }};
             core.setOutput('should-publish', `${shouldPublish}`);
             core.notice(`shouldPublish: ${shouldPublish}`);
 

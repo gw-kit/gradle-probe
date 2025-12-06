@@ -47,3 +47,8 @@ All code resides in `io.github.gwkit.gradleprobe` package:
 ## Code Style
 
 - Each file must have a newline at the end of file (EOL)
+
+## Versioning
+
+- Changelog is maintained in `CHANGELOG.md` following [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) format
+- Project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
