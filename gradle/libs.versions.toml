@@ -1,5 +1,5 @@
 [versions]
-kotlinVer = "2.0.21"
+kotlinVer = "2.2.21"
 
 junitVer = "6.0.1"
 mockkVer = "1.14.6"
