@@ -1,0 +1,82 @@
+name: Build
+
+on:
+  workflow_call:
+  push:
+    branches:
+      - 'main'
+  pull_request:
+    branches:
+      - '**'
+
+jobs:
+
+  build-and-check:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: read
+      checks: write
+      pull-requests: write
+
+    env:
+      gradle_cmd: ./gradlew --parallel -Pci
+        --build-cache --configuration-cache
+        --console=plain
+
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
+        with:
+          cache-read-only: false
+
+      - name: Build & Test
+        run: ${{ env.gradle_cmd }} build --continue
+
+      - name: Check Ignore Coverage Failure
+        id: ignore-coverage-failure
+        if: ${{ !cancelled() }}
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const ignoreByLabel = ${{ contains(github.event.pull_request.labels.*.name, 'suppress-delta-coverage') }};
+            const ignoreByEvent = ${{ github.event_name == 'push' }};
+            const resolution = ignoreByLabel || ignoreByEvent;
+            core.setOutput('result', resolution);
+            if (resolution) {
+              core.notice(`Coverage failure is ignored by: label=${ignoreByLabel}, event=${ignoreByEvent}`);
+            }
+
+      - name: Run Delta Coverage check
+        if: ${{ !cancelled() }}
+        continue-on-error: ${{ steps.ignore-coverage-failure.outputs.result == 'true' }}
+        env:
+          COMPARE_WITH: ${{ github.base_ref || github.ref_name }}
+        run: ${{ env.gradle_cmd }} deltaCoverage
+          -PdiffBase="refs/remotes/origin/${COMPARE_WITH}"
+          --continue
+
+      - name: Publish Coverage Summary
+        if: ${{ !cancelled() }}
+        uses: gw-kit/delta-coverage-action@v1
+        with:
+          suppress-check-failures: ${{ steps.ignore-coverage-failure.outputs.result }}
+
+      - name: Add Test Results to PR
+        uses: EnricoMi/publish-unit-test-result-action@v2.21.0
+        if: ${{ !cancelled() }}
+        continue-on-error: true
+        with:
+          check_name: 'Test Results'
+          files:
+            '**/build/test-results/*/TEST-*.xml'
