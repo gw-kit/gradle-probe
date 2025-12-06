@@ -12,14 +12,8 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.string.shouldEndWith
-import io.mockk.clearAllMocks
-import io.mockk.every
 import io.mockk.mockk
-import io.mockk.mockkStatic
-import io.mockk.unmockkAll
 import org.gradle.testkit.runner.GradleRunner
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtensionContext
@@ -28,25 +22,6 @@ import java.io.File
 class GradlePluginTestExtensionTest {
 
     private val extension = GradlePluginTestExtension()
-    private lateinit var mockGradleRunner: GradleRunner
-
-    @BeforeEach
-    fun setup() {
-        mockGradleRunner = mockk(relaxed = true) {
-            every { withPluginClasspath() } returns this
-            every { withProjectDir(any()) } returns this
-            every { withTestKitDir(any()) } returns this
-        }
-
-        mockkStatic(GradleRunner::class)
-        every { GradleRunner.create() } returns mockGradleRunner
-    }
-
-    @AfterEach
-    fun tearDown() {
-        clearAllMocks()
-        unmockkAll()
-    }
 
     private fun mockExtensionContext(): ExtensionContext = mockk(relaxed = true)
 
