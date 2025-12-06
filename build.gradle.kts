@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.kotlinJvm)
     alias(libs.plugins.deltaCoverage)
     alias(libs.plugins.detekt)
+    alias(libs.plugins.mavenPublish)
     `jvm-test-suite`
     `java-gradle-plugin`
     `maven-publish`
