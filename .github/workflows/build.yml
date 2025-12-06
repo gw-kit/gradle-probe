@@ -4,6 +4,7 @@ on:
   workflow_call:
   push:
     branches:
+      - 'develop'
       - 'main'
   pull_request:
     branches:
@@ -18,8 +19,11 @@ jobs:
       issues: read
       checks: write
       pull-requests: write
+      packages: write
 
     env:
+      GH_USER: ${{ github.actor }}
+      GH_TOKEN: ${{ github.token }}
       gradle_cmd: ./gradlew --parallel -Pci
         --build-cache --configuration-cache
         --console=plain
@@ -42,6 +46,23 @@ jobs:
 
       - name: Build & Test
         run: ${{ env.gradle_cmd }} build --continue
+
+      - name: Check publish
+        id: publish-snapshot
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const hasLabel = ${{ contains(github.event.pull_request.labels.*.name, 'publish-snapshot-artifacts') }};
+            const isPushEvent = ${{ github.event_name == 'push' }};
+            const isMainBranch = ${{ github.ref == 'refs/heads/main' }};
+            const shouldPublish = hasLabel || (isPushEvent && isMainBranch);
+            core.setOutput('should-publish', `${shouldPublish}`);
+            core.notice(`shouldPublish: ${shouldPublish}`);
+
+      - name: Publish Snapshot Artifacts
+        if: ${{ steps.publish-snapshot.outputs.should-publish == 'true' }}
+        run: ${{ env.gradle_cmd }} publishAllPublicationsToGhPackagesRepository
+          -PsnapshotPrefix='SNAPSHOT.${{ github.run_id }}'
 
       - name: Check Ignore Coverage Failure
         id: ignore-coverage-failure
