@@ -42,17 +42,19 @@ class RunTaskTest {
     }
 
     private fun createMinimalProject(): File {
-        val projectRoot = tempDir.resolve("project").apply { mkdirs() }
-        projectRoot.resolve("settings.gradle.kts").writeText("""rootProject.name = "test-project"""")
-        projectRoot.resolve("build.gradle.kts").writeText("""plugins { id("base") }""")
-        return projectRoot
+        return tempDir.resolve("project").apply {
+            mkdirs()
+            resolve("settings.gradle.kts").writeText("""rootProject.name = "test-project"""")
+            resolve("build.gradle.kts").writeText("""plugins { id("base") }""")
+        }
     }
 
     private fun createFailingProject(): File {
-        val projectRoot = tempDir.resolve("failing-project").apply { mkdirs() }
-        projectRoot.resolve("settings.gradle.kts").writeText("""rootProject.name = "failing-project"""")
-        projectRoot.resolve("build.gradle.kts").writeText(
-            """
+        return tempDir.resolve("failing-project").apply {
+            mkdirs()
+            resolve("settings.gradle.kts").writeText("""rootProject.name = "failing-project"""")
+            resolve("build.gradle.kts").writeText(
+                """
             plugins { id("base") }
 
             tasks.register("failingTask") {
@@ -61,7 +63,7 @@ class RunTaskTest {
                 }
             }
             """.trimIndent()
-        )
-        return projectRoot
+            )
+        }
     }
 }
