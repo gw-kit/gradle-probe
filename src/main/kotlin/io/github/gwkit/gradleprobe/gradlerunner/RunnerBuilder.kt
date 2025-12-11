@@ -24,21 +24,17 @@ val GRADLE_HOME: String
 fun buildGradleRunner(
     projectRoot: File,
     testKitPropertyName: String? = null,
-): GradleRunner {
-    return GradleRunner.create()
-        .withPluginClasspath()
-        .withProjectDir(projectRoot)
-        .withTestKitDir(
-            projectRoot.resolve(GRADLE_HOME).apply { mkdirs() }
-        )
-        .apply {
-            if (testKitPropertyName != null) {
-                val testKitPath: String? = System.getProperty(testKitPropertyName)
-                if (testKitPath != null) {
-                    File(projectDir, "gradle.properties").appendText(
-                        File(testKitPath).readText()
-                    )
-                }
-            }
+): GradleRunner = GradleRunner.create()
+    .withPluginClasspath()
+    .withProjectDir(projectRoot)
+    .withTestKitDir(projectRoot.resolve(GRADLE_HOME).apply { mkdirs() })
+    .apply { applyTestKit(testKitPropertyName) }
+
+private fun GradleRunner.applyTestKit(testKitPropertyName: String?) {
+    testKitPropertyName
+        ?.let(System::getProperty)
+        ?.let { testKitFile -> File(testKitFile).readText() }
+        ?.let { testKitContent ->
+            File(projectDir, "gradle.properties").appendText(testKitContent)
         }
 }

@@ -49,7 +49,9 @@ class GradlePluginTestExtension : TestInstancePostProcessor {
 
         with(testInstance) {
             injectProperty<RootProjectDir, File>(rootProjectDir)
-            injectProperty<GradleRunnerInstance, GradleRunner>(buildGradleRunner(rootProjectDir))
+            injectProperty<GradleRunnerInstance, GradleRunner>(
+                buildGradleRunner(rootProjectDir, TEST_KIT_FILE_PROP),
+            )
             injectProperty<ProjectFile, RestorableFile> {
                 val fileToBeRestored: File = resolveExistingFile(rootProjectDir, relativePath)
                 val originCopy: File = tempTestFile.resolve(UUID.randomUUID().toString())
@@ -140,6 +142,8 @@ class GradlePluginTestExtension : TestInstancePostProcessor {
 
         const val GROOVY_BUILD_FILE_NAME = "build.gradle"
         const val KOTLIN_BUILD_FILE_NAME = "build.gradle.kts"
+
+        const val TEST_KIT_FILE_PROP = "io.github.gwkit.coverjet.test-kit"
 
         val GRADLE_BUILD_FILES = setOf(GROOVY_BUILD_FILE_NAME, KOTLIN_BUILD_FILE_NAME)
     }
