@@ -3,7 +3,7 @@ kotlinVer = "2.2.21"
 
 junitVer = "6.0.1"
 mockkVer = "1.14.6"
-kotestVer = "6.0.7"
+kotestVer = "6.1.0"
 jimfsVer = "1.3.1"
 
 deltaCoverageVer = "3.5.1"
